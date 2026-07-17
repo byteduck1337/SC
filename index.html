@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цифровой Щит - Оценка киберустойчивости</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Шапка -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                <span class="logo-text">Цифровой Щит</span>
+            </div>
+            <nav class="nav">
+                <a href="#diagnostic" class="nav-link active">Диагностика</a>
+                <a href="#recommendations" class="nav-link">Рекомендации</a>
+                <a href="#about" class="nav-link">О проекте</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Главный блок -->
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1 class="hero-title">Оцените свою <span class="highlight">киберустойчивость</span></h1>
+                <p class="hero-subtitle">Проверьте, насколько вы защищены от современных цифровых угроз. Получите персональные рекомендации по усилению безопасности.</p>
+                <button class="btn btn-primary btn-large" id="startScanBtn">
+                    <span class="btn-icon">🔍</span>
+                    Начать сканирование
+                </button>
+            </div>
+        </section>
+
+        <!-- Блок диагностики -->
+        <section id="diagnostic" class="section diagnostic">
+            <div class="container">
+                <h2 class="section-title">Результаты диагностики</h2>
+                <div class="scan-status" id="scanStatus">
+                    <div class="status-indicator idle">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Готов к сканированию</span>
+                    </div>
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Карточки с результатами -->
+                <div class="results-grid" id="resultsGrid">
+                    <!-- Заполняется через JavaScript -->
+                </div>
+
+                <!-- Общая оценка -->
+                <div class="score-container" id="scoreContainer" style="display: none;">
+                    <div class="score-card">
+                        <div class="score-circle" id="scoreCircle">
+                            <span class="score-number" id="scoreNumber">0</span>
+                            <span class="score-label">%</span>
+                        </div>
+                        <div class="score-info">
+                            <h3 id="scoreTitle">Ваш уровень защиты</h3>
+                            <p id="scoreDescription">Оценка сформирована на основе множества факторов</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Блок рекомендаций -->
+        <section id="recommendations" class="section recommendations">
+            <div class="container">
+                <h2 class="section-title">Персональные рекомендации</h2>
+                <p class="section-subtitle">На основе выявленных уязвимостей мы подготовили для вас советы по усилению защиты.</p>
+                <div class="recommendations-list" id="recommendationsList">
+                    <!-- Заполняется через JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Блок об атаках -->
+        <section id="about" class="section about">
+            <div class="container">
+                <h2 class="section-title">Известные и новые угрозы</h2>
+                <div class="threats-grid">
+                    <div class="threat-card">
+                        <div class="threat-icon">🎣</div>
+                        <h3>Фишинг</h3>
+                        <p>Мошеннические сайты, маскирующиеся под официальные ресурсы для кражи паролей и данных.</p>
+                    </div>
+                    <div class="threat-card">
+                        <div class="threat-icon">💉</div>
+                        <h3>XSS-атаки</h3>
+                        <p>Внедрение вредоносного кода в веб-страницы для кражи сессий или перенаправления пользователей.</p>
+                    </div>
+                    <div class="threat-card">
+                        <div class="threat-icon">🔄</div>
+                        <h3>CSRF</h3>
+                        <p>Подделка межсайтовых запросов для выполнения действий от имени авторизованного пользователя.</p>
+                    </div>
+                    <div class="threat-card threat-new">
+                        <div class="threat-icon">🤖</div>
+                        <h3>Троянский советчик</h3>
+                        <p><strong>Новый тип угрозы:</strong> Вредоносные сайты маскируются под помощников и убеждают установить "антивирус", который на деле является шпионским ПО.</p>
+                    </div>
+                    <div class="threat-card">
+                        <div class="threat-icon">🖐️</div>
+                        <h3>Цифровой отпечаток</h3>
+                        <p>Сбор уникальных характеристик браузера для отслеживания пользователя даже в приватном режиме.</p>
+                    </div>
+                    <div class="threat-card">
+                        <div class="threat-icon">🔓</div>
+                        <h3>SQL-инъекции</h3>
+                        <p>Внедрение SQL-команд в поля ввода для получения доступа к базе данных сайта.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 Цифровой Щит. Проект создан в образовательных целях для повышения киберграмотности.</p>
+            <p class="footer-disclaimer">⚠️ Все проверки выполняются на стороне клиента. Данные не передаются на сервер.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
