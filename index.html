@@ -1,135 +1,233 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Цифровой Щит - Оценка киберустойчивости</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Цифровой Щит — Аудит безопасности браузера 2026</title>
+<meta name="description" content="Локальный аудит безопасности браузера: 15 векторов атак, оценка уязвимости в процентах, персональные рекомендации.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2'%3E%3Cpath d='M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Шапка -->
-    <header class="header">
-        <div class="container">
-            <div class="logo">
-                <span class="logo-icon">🛡️</span>
-                <span class="logo-text">Цифровой Щит</span>
-            </div>
-            <nav class="nav">
-                <a href="#diagnostic" class="nav-link active">Диагностика</a>
-                <a href="#recommendations" class="nav-link">Рекомендации</a>
-                <a href="#about" class="nav-link">О проекте</a>
-            </nav>
+
+<div class="bg-fx" aria-hidden="true"></div>
+<div class="bg-grid" aria-hidden="true"></div>
+
+<header class="header">
+  <div class="container header-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+      </span>
+      <span class="brand-name">Цифровой Щит<span class="brand-tag">v3.0</span></span>
+    </a>
+    <nav class="nav">
+      <a href="#scanner" class="nav-link">Диагностика</a>
+      <a href="#threats" class="nav-link">Энциклопедия угроз</a>
+      <a href="#about" class="nav-link">О проекте</a>
+    </nav>
+    <div class="header-status">
+      <span class="hs-dot"></span>
+      <span>Локальный режим</span>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-visual" aria-hidden="true">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="ring r3"></div>
+        <div class="hero-core">
+          <svg class="ic ic-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
         </div>
-    </header>
+      </div>
+      <div class="hero-badge">
+        <svg class="ic ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg>
+        Аудит-движок 2026 · 15 векторов атак
+      </div>
+      <h1 class="hero-title">Насколько уязвим<br><span class="grad">ваш браузер</span>?</h1>
+      <p class="hero-sub">Полная локальная проверка — от эксплойтов движка и криптоджекинга до фишинга и цифрового отпечатка. Результат в процентах и персональный план защиты.</p>
+      <button class="btn btn-primary btn-lg" id="openConsentBtn">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
+        Начать проверку
+      </button>
+      <div class="hero-stats">
+        <div class="hs-item"><b>15</b><span>проверок</span></div>
+        <div class="hs-item"><b>~10 сек</b><span>длительность</span></div>
+        <div class="hs-item"><b>0 байт</b><span>на сервер</span></div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Главный блок -->
-    <main>
-        <section class="hero">
-            <div class="container">
-                <h1 class="hero-title">Оцените свою <span class="highlight">киберустойчивость</span></h1>
-                <p class="hero-subtitle">Проверьте, насколько вы защищены от современных цифровых угроз. Получите персональные рекомендации по усилению безопасности.</p>
-                <button class="btn btn-primary btn-large" id="startScanBtn">
-                    <span class="btn-icon">🔍</span>
-                    Начать сканирование
-                </button>
-            </div>
-        </section>
-
-        <!-- Блок диагностики -->
-        <section id="diagnostic" class="section diagnostic">
-            <div class="container">
-                <h2 class="section-title">Результаты диагностики</h2>
-                <div class="scan-status" id="scanStatus">
-                    <div class="status-indicator idle">
-                        <span class="status-dot"></span>
-                        <span class="status-text">Готов к сканированию</span>
-                    </div>
-                    <div class="progress-bar" id="progressBar">
-                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-                    </div>
-                </div>
-
-                <!-- Карточки с результатами -->
-                <div class="results-grid" id="resultsGrid">
-                    <!-- Заполняется через JavaScript -->
-                </div>
-
-                <!-- Общая оценка -->
-                <div class="score-container" id="scoreContainer" style="display: none;">
-                    <div class="score-card">
-                        <div class="score-circle" id="scoreCircle">
-                            <span class="score-number" id="scoreNumber">0</span>
-                            <span class="score-label">%</span>
-                        </div>
-                        <div class="score-info">
-                            <h3 id="scoreTitle">Ваш уровень защиты</h3>
-                            <p id="scoreDescription">Оценка сформирована на основе множества факторов</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Блок рекомендаций -->
-        <section id="recommendations" class="section recommendations">
-            <div class="container">
-                <h2 class="section-title">Персональные рекомендации</h2>
-                <p class="section-subtitle">На основе выявленных уязвимостей мы подготовили для вас советы по усилению защиты.</p>
-                <div class="recommendations-list" id="recommendationsList">
-                    <!-- Заполняется через JavaScript -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Блок об атаках -->
-        <section id="about" class="section about">
-            <div class="container">
-                <h2 class="section-title">Известные и новые угрозы</h2>
-                <div class="threats-grid">
-                    <div class="threat-card">
-                        <div class="threat-icon">🎣</div>
-                        <h3>Фишинг</h3>
-                        <p>Мошеннические сайты, маскирующиеся под официальные ресурсы для кражи паролей и данных.</p>
-                    </div>
-                    <div class="threat-card">
-                        <div class="threat-icon">💉</div>
-                        <h3>XSS-атаки</h3>
-                        <p>Внедрение вредоносного кода в веб-страницы для кражи сессий или перенаправления пользователей.</p>
-                    </div>
-                    <div class="threat-card">
-                        <div class="threat-icon">🔄</div>
-                        <h3>CSRF</h3>
-                        <p>Подделка межсайтовых запросов для выполнения действий от имени авторизованного пользователя.</p>
-                    </div>
-                    <div class="threat-card threat-new">
-                        <div class="threat-icon">🤖</div>
-                        <h3>Троянский советчик</h3>
-                        <p><strong>Новый тип угрозы:</strong> Вредоносные сайты маскируются под помощников и убеждают установить "антивирус", который на деле является шпионским ПО.</p>
-                    </div>
-                    <div class="threat-card">
-                        <div class="threat-icon">🖐️</div>
-                        <h3>Цифровой отпечаток</h3>
-                        <p>Сбор уникальных характеристик браузера для отслеживания пользователя даже в приватном режиме.</p>
-                    </div>
-                    <div class="threat-card">
-                        <div class="threat-icon">🔓</div>
-                        <h3>SQL-инъекции</h3>
-                        <p>Внедрение SQL-команд в поля ввода для получения доступа к базе данных сайта.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Подвал -->
-    <footer class="footer">
-        <div class="container">
-            <p>© 2026 Цифровой Щит. Проект создан в образовательных целях для повышения киберграмотности.</p>
-            <p class="footer-disclaimer">⚠️ Все проверки выполняются на стороне клиента. Данные не передаются на сервер.</p>
+  <section class="section" id="scanner">
+    <div class="container">
+      <div class="scanner-card card reveal" id="scannerCard">
+        <div class="scanner-head">
+          <div class="scanner-title">
+            <span class="status-dot idle" id="statusDot"></span>
+            <span id="statusText">Ожидание запуска</span>
+          </div>
+          <span class="scanner-percent mono" id="progressPercent">0%</span>
         </div>
-    </footer>
+        <div class="progress">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="t-dot tr"></span><span class="t-dot ty"></span><span class="t-dot tg"></span>
+            <span class="terminal-title mono">audit-console · localhost</span>
+          </div>
+          <div class="terminal-body mono" id="terminalBody">
+            <div class="t-line t-dim">// Нажмите «Начать проверку», чтобы запустить аудит безопасности</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <script src="script.js"></script>
+  <section class="section" id="resultsSection" hidden>
+    <div class="container">
+      <h2 class="section-title">Результаты аудита</h2>
+      <p class="section-sub" id="resultsSub"></p>
+      <div class="results-layout">
+        <div class="card gauge-card">
+          <div class="gauge-wrap">
+            <svg class="gauge" viewBox="0 0 220 220">
+              <defs>
+                <linearGradient id="gGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" id="gStop1" stop-color="#34d399"/>
+                  <stop offset="100%" id="gStop2" stop-color="#34d399"/>
+                </linearGradient>
+              </defs>
+              <circle class="gauge-track" cx="110" cy="110" r="94"/>
+              <circle class="gauge-fill" id="gaugeFill" cx="110" cy="110" r="94"/>
+            </svg>
+            <div class="gauge-center">
+              <span class="gauge-num mono" id="gaugeNum">0%</span>
+              <span class="gauge-cap">уязвимость</span>
+            </div>
+          </div>
+          <h3 class="verdict-title" id="verdictTitle"></h3>
+          <p class="verdict-text" id="verdictText"></p>
+          <div class="verdict-stats">
+            <div class="vs vs-ok"><b id="cntPass">0</b><span>в порядке</span></div>
+            <div class="vs vs-warn"><b id="cntWarn">0</b><span>внимание</span></div>
+            <div class="vs vs-crit"><b id="cntFail">0</b><span>критично</span></div>
+          </div>
+        </div>
+        <div class="checks-wrap">
+          <div class="checks-grid" id="checksGrid"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="recsSection" hidden>
+    <div class="container">
+      <h2 class="section-title">Что делать дальше</h2>
+      <p class="section-sub">Персональный план усиления защиты — отсортирован по приоритету.</p>
+      <div class="recs-grid" id="recsGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="threats">
+    <div class="container">
+      <h2 class="section-title">15 угроз, которые мы проверяем</h2>
+      <p class="section-sub">От классических XSS и фишинга до криптоджекинга и атак «водопой».</p>
+      <div class="threats-grid" id="threatsGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="container">
+      <h2 class="section-title">О проекте</h2>
+      <div class="about-grid">
+        <div class="card about-item reveal">
+          <span class="about-ic">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <h3>100% локально</h3>
+          <p>Все проверки выполняются в вашем браузере. Ни один байт данных не покидает устройство.</p>
+        </div>
+        <div class="card about-item reveal">
+          <span class="about-ic">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          </span>
+          <h3>Образовательная цель</h3>
+          <p>Проект повышает киберграмотность. Это эвристический аудит, а не профессиональный пентест.</p>
+        </div>
+        <div class="card about-item reveal">
+          <span class="about-ic">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.9 2.9M16.2 16.2l2.9 2.9M2 12h4M18 12h4M4.9 19.1l2.9-2.9M16.2 7.8l2.9-2.9"/></svg>
+          </span>
+          <h3>Актуально для 2026</h3>
+          <p>Проверки учитывают современные движки Chromium, WebKit и Gecko, а также новые векторы атак.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer" data-no-scan>
+  <div class="container">
+    <p>© 2026 Цифровой Щит. Проект создан в образовательных целях для повышения киберграмотности.</p>
+    <p class="footer-note">Все проверки выполняются на стороне клиента. Данные не передаются на сервер.</p>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="consentModal" data-no-scan role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal card">
+    <button class="modal-close" id="modalClose" aria-label="Закрыть">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-ic">
+      <svg class="ic ic-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+    </div>
+    <h3 id="modalTitle">Согласие на локальную проверку</h3>
+    <p class="modal-sub">Перед запуском аудита подтвердите, что вы понимаете, что именно будет проверяться.</p>
+    <ul class="modal-list">
+      <li>
+        <svg class="ic ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        Анализ версии браузера, движка и установленных плагинов
+      </li>
+      <li>
+        <svg class="ic ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        Проверка заголовков безопасности, cookies и разрешений
+      </li>
+      <li>
+        <svg class="ic ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        Оценка цифрового отпечатка и скриптов на странице
+      </li>
+      <li>
+        <svg class="ic ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Данные не покидают ваше устройство
+      </li>
+    </ul>
+    <label class="consent-check">
+      <input type="checkbox" id="consentBox">
+      <span class="box">
+        <svg class="ic ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </span>
+      <span>Я понимаю и соглашаюсь на проведение проверки</span>
+    </label>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="modalCancel">Отмена</button>
+      <button class="btn btn-primary" id="startScanBtn" disabled>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg>
+        Запустить проверку
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js" defer></script>
 </body>
 </html>
