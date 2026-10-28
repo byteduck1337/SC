@@ -3,24 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Цифровой Щит — Аудит безопасности браузера 2026</title>
-<meta name="description" content="Локальный аудит безопасности браузера: 25 векторов атак, оценка уязвимости в процентах, персональные рекомендации.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2'%3E%3Cpath d='M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z'/%3E%3C/svg%3E">
+<title>Цифровой Щит — Аудит безопасности браузера</title>
+<meta name="description" content="Локальный аудит безопасности браузера: 31 вектор атак, оценка уязвимости, персональные рекомендации.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2'%3E%3Cpath d='M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="bg-fx" aria-hidden="true"></div>
-<div class="bg-grid" aria-hidden="true"></div>
+<div class="dof-bg" aria-hidden="true">
+  <div class="dof-orb o1"></div>
+  <div class="dof-orb o2"></div>
+  <div class="dof-orb o3"></div>
+</div>
+<div class="dof-grid" aria-hidden="true"></div>
+<div class="dof-vignette" aria-hidden="true"></div>
+
 <header class="header">
   <div class="container header-inner">
     <a class="brand" href="#top">
       <span class="brand-mark">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
       </span>
-      <span class="brand-name">Цифровой Щит<span class="brand-tag">v3.1</span></span>
+      <span class="brand-name">Цифровой Щит</span>
     </a>
     <nav class="nav">
       <a href="#scanner" class="nav-link">Диагностика</a>
@@ -33,6 +39,7 @@
     </div>
   </div>
 </header>
+
 <main id="top">
   <section class="hero">
     <div class="container">
@@ -41,26 +48,27 @@
         <div class="ring r2"></div>
         <div class="ring r3"></div>
         <div class="hero-core">
-          <svg class="ic ic-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+          <svg class="ic ic-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
         </div>
       </div>
       <div class="hero-badge">
         <svg class="ic ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg>
-        Аудит-движок 2026 · 25 векторов атак
+        31 вектор атак · аудит-движок 2026
       </div>
       <h1 class="hero-title">Насколько уязвим<br><span class="grad">ваш браузер</span>?</h1>
-      <p class="hero-sub">Полная локальная проверка — от эксплойтов движка и AI-фишинга до MITM, heap spraying и цифрового отпечатка. Результат в процентах и персональный план защиты.</p>
+      <p class="hero-sub">Полная локальная проверка — от V8/JIT-эксплойтов, Wasm Sandbox Escape и WebGPU-уязвимостей до AI-фишинга, MITM и CSS-инъекций. Результат и персональный план защиты.</p>
       <button class="btn btn-primary btn-lg" id="openConsentBtn">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
         Начать проверку
       </button>
       <div class="hero-stats">
-        <div class="hs-item"><b>25</b><span>проверок</span></div>
-        <div class="hs-item"><b>~15 сек</b><span>длительность</span></div>
+        <div class="hs-item"><b>31</b><span>проверка</span></div>
+        <div class="hs-item"><b>~18 сек</b><span>длительность</span></div>
         <div class="hs-item"><b>0 байт</b><span>на сервер</span></div>
       </div>
     </div>
   </section>
+
   <section class="section" id="scanner">
     <div class="container">
       <div class="scanner-card card reveal" id="scannerCard">
@@ -71,21 +79,20 @@
           </div>
           <span class="scanner-percent mono" id="progressPercent">0%</span>
         </div>
-        <div class="progress">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
+        <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
         <div class="terminal">
           <div class="terminal-bar">
             <span class="t-dot tr"></span><span class="t-dot ty"></span><span class="t-dot tg"></span>
-            <span class="terminal-title mono">audit-console · localhost</span>
+            <span class="terminal-title mono">audit-console</span>
           </div>
           <div class="terminal-body mono" id="terminalBody">
-            <div class="t-line t-dim">// Нажмите «Начать проверку», чтобы запустить аудит безопасности</div>
+            <div class="t-line t-dim">Запустите проверку, чтобы начать аудит безопасности</div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
   <section class="section" id="resultsSection" hidden>
     <div class="container">
       <h2 class="section-title">Результаты аудита</h2>
@@ -94,12 +101,6 @@
         <div class="card gauge-card">
           <div class="gauge-wrap">
             <svg class="gauge" viewBox="0 0 220 220">
-              <defs>
-                <linearGradient id="gGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" id="gStop1" stop-color="#34d399"/>
-                  <stop offset="100%" id="gStop2" stop-color="#34d399"/>
-                </linearGradient>
-              </defs>
               <circle class="gauge-track" cx="110" cy="110" r="94"/>
               <circle class="gauge-fill" id="gaugeFill" cx="110" cy="110" r="94"/>
             </svg>
@@ -122,69 +123,74 @@
       </div>
     </div>
   </section>
+
   <section class="section" id="recsSection" hidden>
     <div class="container">
       <h2 class="section-title">Что делать дальше</h2>
-      <p class="section-sub">Персональный план усиления защиты — отсортирован по приоритету.</p>
+      <p class="section-sub">Персональный план усиления защиты, отсортированный по приоритету.</p>
       <div class="recs-grid" id="recsGrid"></div>
     </div>
   </section>
+
   <section class="section" id="threats">
     <div class="container">
-      <h2 class="section-title">25 угроз, которые мы проверяем</h2>
-      <p class="section-sub">От классических XSS и фишинга до AI-атак, heap spraying и перехвата трафика.</p>
+      <h2 class="section-title">31 угроза, которую мы проверяем</h2>
+      <p class="section-sub">От классических XSS и фишинга до V8-эксплойтов, Wasm Sandbox Escape и CSS-инъекций.</p>
       <div class="threats-grid" id="threatsGrid"></div>
     </div>
   </section>
+
   <section class="section" id="about">
     <div class="container">
       <h2 class="section-title">О проекте</h2>
       <div class="about-grid">
         <div class="card about-item reveal">
           <span class="about-ic">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </span>
           <h3>100% локально</h3>
-          <p>Все проверки выполняются в вашем браузере. Ни один байт данных не покидает устройство.</p>
+          <p>Все проверки выполняются в браузере. Ни один байт данных не покидает устройство.</p>
         </div>
         <div class="card about-item reveal">
           <span class="about-ic">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
           </span>
           <h3>Образовательная цель</h3>
           <p>Проект повышает киберграмотность. Это эвристический аудит, а не профессиональный пентест.</p>
         </div>
         <div class="card about-item reveal">
           <span class="about-ic">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.9 2.9M16.2 16.2l2.9 2.9M2 12h4M18 12h4M4.9 19.1l2.9-2.9M16.2 7.8l2.9-2.9"/></svg>
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.9 2.9M16.2 16.2l2.9 2.9M2 12h4M18 12h4M4.9 19.1l2.9-2.9M16.2 7.8l2.9-2.9"/></svg>
           </span>
           <h3>Актуально для 2026</h3>
-          <p>Проверки учитывают современные движки Chromium, WebKit и Gecko, а также новые векторы атак — от AI-фишинга до heap spraying.</p>
+          <p>Учтены свежие уязвимости: V8/JIT type confusion, Wasm sandbox escape, WebGPU UAF, уязвимости расширений и Storage Access API.</p>
         </div>
       </div>
     </div>
   </section>
 </main>
+
 <footer class="footer" data-no-scan>
   <div class="container">
     <p>© 2026 Цифровой Щит. Проект создан в образовательных целях для повышения киберграмотности.</p>
     <p class="footer-note">Все проверки выполняются на стороне клиента. Данные не передаются на сервер.</p>
   </div>
 </footer>
+
 <div class="modal-overlay" id="consentModal" data-no-scan role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal card">
     <button class="modal-close" id="modalClose" aria-label="Закрыть">
       <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
     <div class="modal-ic">
-      <svg class="ic ic-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+      <svg class="ic ic-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
     </div>
     <h3 id="modalTitle">Согласие на локальную проверку</h3>
     <p class="modal-sub">Перед запуском аудита подтвердите, что вы понимаете, что именно будет проверяться.</p>
     <ul class="modal-list">
       <li>
         <svg class="ic ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-        Анализ версии браузера, движка и установленных плагинов
+        Анализ версии браузера, движка, плагинов и расширений
       </li>
       <li>
         <svg class="ic ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
@@ -192,7 +198,7 @@
       </li>
       <li>
         <svg class="ic ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-        Оценка цифрового отпечатка, ссылок и скриптов на странице
+        Оценка JIT-эксплойтов, Wasm, WebGPU, CSS-инъекций и Storage Access API
       </li>
       <li>
         <svg class="ic ic-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
