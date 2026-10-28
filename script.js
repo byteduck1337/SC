@@ -1,10 +1,5 @@
-/* ============================================================
-   ЦИФРОВОЙ ЩИТ v3.1 · Аудит-движок 2026
-   25 проверок · Все проверки выполняются локально
-   ============================================================ */
 'use strict';
 
-/* ================= SVG-ИКОНКИ ================= */
 const ICONS = {
   shieldCheck:'<path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/>',
   download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
@@ -26,7 +21,6 @@ const ICONS = {
   external:'<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
   chevron:'<path d="m6 9 6 6 6-6"/>',
   check:'<path d="M20 6 9 17l-5-5"/>',
-  /* --- новые иконки v3.1 --- */
   type:'<path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/>',
   tabs:'<rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
   tabBack:'<path d="m15 14 5-5-5-5"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/>',
@@ -38,150 +32,82 @@ const ICONS = {
   split:'<path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"/><path d="m15 9 6-6"/>',
   bot:'<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>'
 };
-const icon = (name, cls = '') =>
-  `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
 
-/* ================= ЭНЦИКЛОПЕДИЯ УГРОЗ ================= */
+const icon = (name, cls = '') =>
+  `<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
+
 const THREATS = [
-  { icon:'download', name:'Drive-by Download', level:'high', levelName:'Высокая',
-    text:'Скрытая загрузка вредоносных файлов при простом посещении страницы — без кликов и подтверждений. Использует ошибки браузера и устаревшее ПО.' },
-  { icon:'bug', name:'Эксплойты браузера', level:'crit', levelName:'Критическая',
-    text:'Атаки на уязвимости движков Chromium, WebKit и Gecko позволяют выполнить произвольный код при простом открытии страницы.' },
-  { icon:'plug', name:'Эксплойты плагинов', level:'high', levelName:'Высокая',
-    text:'Flash, Java-апплеты и сторонние PDF-просмотрщики — исторически самые уязвимые компоненты. Каждый лишний плагин — открытая дверь.' },
-  { icon:'code', name:'XSS-атаки', level:'high', levelName:'Высокая',
-    text:'Внедрение чужого скрипта в доверенную страницу: кража сессий, паролей и выполнение действий от вашего имени.' },
-  { icon:'refresh', name:'CSRF', level:'med', levelName:'Средняя',
-    text:'Незаметная отправка запросов от вашего имени: перевод средств, смена пароля — пока вы авторизованы на сайте.' },
-  { icon:'cursor', name:'Кликджекинг', level:'med', levelName:'Средняя',
-    text:'Невидимый слой поверх интерфейса: вы думаете, что нажимаете одно, а подтверждаете совсем другое.' },
-  { icon:'fish', name:'Фишинг', level:'crit', levelName:'Критическая',
-    text:'Поддельные страницы входа банков и сервисов, неотличимые от настоящих. Цель — ваши пароли и карты.' },
-  { icon:'browserLock', name:'Спуфинг', level:'high', levelName:'Высокая',
-    text:'Подмена адресной строки, домена или SSL-сертификата: сайт выглядит легитимным, но принадлежит атакующему.' },
-  { icon:'cookie', name:'Session Hijacking', level:'crit', levelName:'Критическая',
-    text:'Кража cookies и токенов сессии даёт злоумышленнику полный доступ к вашим аккаунтам — без пароля.' },
-  { icon:'fingerprint', name:'Fingerprinting', level:'med', levelName:'Средняя',
-    text:'Сбор десятков параметров браузера в уникальный «отпечаток»: вас отслеживают даже в приватном режиме.' },
-  { icon:'cpu', name:'Криптоджекинг', level:'med', levelName:'Средняя',
-    text:'Скрытый майнинг: чужой сайт использует ваш процессор и электричество, замедляя устройство и сажая батарею.' },
-  { icon:'target', name:'Атака «Водопой»', level:'high', levelName:'Высокая',
-    text:'Взлом сайтов, которыми пользуется нужная атакующим аудитория: вы заражаетесь на доверенном ресурсе.' },
-  { icon:'alert', name:'Scareware', level:'high', levelName:'Высокая',
-    text:'«Ваш компьютер заражён!» — фальшивая паника с предложением купить «лечение», которое само является вредоносом.' },
-  { icon:'key', name:'Брутфорс', level:'med', levelName:'Средняя',
-    text:'Автоматический подбор паролей через формы входа, не защищённые капчей и ограничениями на число попыток.' },
-  { icon:'network', name:'Ботнет', level:'crit', levelName:'Критическая',
-    text:'Ваше устройство становится частью сети ботов: рассылает спам, участвует в DDoS и майнит — без вашего ведома.' },
-  /* --- новые угрозы v3.1 --- */
-  { icon:'type', name:'Typosquatting', level:'high', levelName:'Высокая',
-    text:'Домены-двойники с опечатками (g00gle.com, yandeks.ru): пользователь не замечает подмену и сам вводит пароль.' },
-  { icon:'tabs', name:'Tabnabbing', level:'med', levelName:'Средняя',
-    text:'Атака на неактивную вкладку: пока вы на другой странице, эта вкладка перерисовывается под страницу входа и крадёт пароль.' },
-  { icon:'tabBack', name:'Reverse Tabnabbing', level:'med', levelName:'Средняя',
-    text:'Открытая по ссылке страница через window.opener переписывает адрес исходной вкладки и превращает её в фишинговую.' },
-  { icon:'pin', name:'Session Fixation', level:'high', levelName:'Высокая',
-    text:'Злоумышленник заранее навязывает жертве известный session ID, а после входа жертвы получает полный доступ к аккаунту.' },
-  { icon:'globe', name:'DNS Spoofing', level:'high', levelName:'Высокая',
-    text:'Подмена DNS-записей: запрос к настоящему домену приводит на сервер атакующего. Особенно опасна без HTTPS и HSTS.' },
-  { icon:'terminal', name:'DevTools-атаки', level:'med', levelName:'Средняя',
-    text:'Self-XSS и вредоносные скрипты в консоли: жертву убеждают выполнить код, передающий доступ к аккаунту.' },
-  { icon:'layout', name:'UI Redressing', level:'high', levelName:'Высокая',
-    text:'Видимый интерфейс страницы подменяется: кнопки и поля оказываются не там и не те, что видит пользователь.' },
-  { icon:'layers', name:'Heap Spraying', level:'crit', levelName:'Критическая',
-    text:'Заполнение памяти браузера вредоносным кодом для эксплуатации уязвимостей движка. Защита — только актуальный браузер.' },
-  { icon:'split', name:'Man-in-the-Middle', level:'crit', levelName:'Критическая',
-    text:'Перехват и подмена трафика между вами и сайтом: в открытых сетях атакующий видит пароли, сообщения и платежи.' },
-  { icon:'bot', name:'AI-фишинг', level:'crit', levelName:'Критическая',
-    text:'Фишинг, сгенерированный нейросетями: идеальный язык, персонализация, поддельные «помощники». Отличить можно только по домену.' }
+  { icon:'download', name:'Drive-by Download', level:'high', levelName:'Высокая', text:'Скрытая загрузка вредоносных файлов при простом посещении страницы. Использует ошибки браузера и устаревшее ПО.' },
+  { icon:'bug', name:'Эксплойты браузера', level:'crit', levelName:'Критическая', text:'Атаки на уязвимости движков Chromium, WebKit и Gecko позволяют выполнить произвольный код при открытии страницы.' },
+  { icon:'plug', name:'Эксплойты плагинов', level:'high', levelName:'Высокая', text:'Flash, Java-апплеты и сторонние PDF-просмотрщики — исторически самые уязвимые компоненты. Каждый лишний плагин — открытая дверь.' },
+  { icon:'code', name:'XSS-атаки', level:'high', levelName:'Высокая', text:'Внедрение чужого скрипта в доверенную страницу: кража сессий, паролей и выполнение действий от вашего имени.' },
+  { icon:'refresh', name:'CSRF', level:'med', levelName:'Средняя', text:'Незаметная отправка запросов от вашего имени: перевод средств, смена пароля — пока вы авторизованы на сайте.' },
+  { icon:'cursor', name:'Кликджекинг', level:'med', levelName:'Средняя', text:'Невидимый слой поверх интерфейса: вы думаете, что нажимаете одно, а подтверждаете совсем другое.' },
+  { icon:'fish', name:'Фишинг', level:'crit', levelName:'Критическая', text:'Поддельные страницы входа банков и сервисов, неотличимые от настоящих. Цель — ваши пароли и карты.' },
+  { icon:'browserLock', name:'Спуфинг', level:'high', levelName:'Высокая', text:'Подмена адресной строки, домена или SSL-сертификата: сайт выглядит легитимным, но принадлежит атакующему.' },
+  { icon:'cookie', name:'Session Hijacking', level:'crit', levelName:'Критическая', text:'Кража cookies и токенов сессии даёт злоумышленнику полный доступ к вашим аккаунтам — без пароля.' },
+  { icon:'fingerprint', name:'Fingerprinting', level:'med', levelName:'Средняя', text:'Сбор десятков параметров браузера в уникальный «отпечаток»: вас отслеживают даже в приватном режиме.' },
+  { icon:'cpu', name:'Криптоджекинг', level:'med', levelName:'Средняя', text:'Скрытый майнинг: чужой сайт использует ваш процессор и электричество, замедляя устройство и сажая батарею.' },
+  { icon:'target', name:'Атака «Водопой»', level:'high', levelName:'Высокая', text:'Взлом сайтов, которыми пользуется нужная атакующим аудитория: вы заражаетесь на доверенном ресурсе.' },
+  { icon:'alert', name:'Scareware', level:'high', levelName:'Высокая', text:'«Ваш компьютер заражён!» — фальшивая паника с предложением купить «лечение», которое само является вредоносом.' },
+  { icon:'key', name:'Брутфорс', level:'med', levelName:'Средняя', text:'Автоматический подбор паролей через формы входа, не защищённые капчей и ограничениями на число попыток.' },
+  { icon:'network', name:'Ботнет', level:'crit', levelName:'Критическая', text:'Ваше устройство становится частью сети ботов: рассылает спам, участвует в DDoS и майнит — без вашего ведома.' },
+  { icon:'type', name:'Typosquatting', level:'high', levelName:'Высокая', text:'Домены-двойники с опечатками (g00gle.com, yandeks.ru): пользователь не замечает подмену и сам вводит пароль.' },
+  { icon:'tabs', name:'Tabnabbing', level:'med', levelName:'Средняя', text:'Атака на неактивную вкладку: пока вы на другой странице, эта вкладка перерисовывается под страницу входа и крадёт пароль.' },
+  { icon:'tabBack', name:'Reverse Tabnabbing', level:'med', levelName:'Средняя', text:'Открытая по ссылке страница через window.opener переписывает адрес исходной вкладки и превращает её в фишинговую.' },
+  { icon:'pin', name:'Session Fixation', level:'high', levelName:'Высокая', text:'Злоумышленник заранее навязывает жертве известный session ID, а после входа жертвы получает полный доступ к аккаунту.' },
+  { icon:'globe', name:'DNS Spoofing', level:'high', levelName:'Высокая', text:'Подмена DNS-записей: запрос к настоящему домену приводит на сервер атакующего. Особенно опасна без HTTPS и HSTS.' },
+  { icon:'terminal', name:'DevTools-атаки', level:'med', levelName:'Средняя', text:'Self-XSS и вредоносные скрипты в консоли: жертву убеждают выполнить код, передающий доступ к аккаунту.' },
+  { icon:'layout', name:'UI Redressing', level:'high', levelName:'Высокая', text:'Видимый интерфейс страницы подменяется: кнопки и поля оказываются не там и не те, что видит пользователь.' },
+  { icon:'layers', name:'Heap Spraying', level:'crit', levelName:'Критическая', text:'Заполнение памяти браузера вредоносным кодом для эксплуатации уязвимостей движка. Защита — только актуальный браузер.' },
+  { icon:'split', name:'Man-in-the-Middle', level:'crit', levelName:'Критическая', text:'Перехват и подмена трафика между вами и сайтом: в открытых сетях атакующий видит пароли, сообщения и платежи.' },
+  { icon:'bot', name:'AI-фишинг', level:'crit', levelName:'Критическая', text:'Фишинг, сгенерированный нейросетями: идеальный язык, персонализация, поддельные «помощники». Отличить можно только по домену.' },
+  { icon:'cpu', name:'V8 / JIT-эксплойты', level:'crit', levelName:'Критическая', text:'Атаки на JIT-компиляторы (V8 в Chrome, SpiderMonkey в Firefox) через type confusion и use-after-free. Позволяют выполнить код внутри песочницы. CVE-2026-85046, CVE-2026-87491, CVE-2026-106341.' },
+  { icon:'layers', name:'Wasm Sandbox Escape', level:'crit', levelName:'Критическая', text:'Выход из песочницы WebAssembly для получения контроля над браузером. Часто используется в цепочке с V8-эксплойтами (CVE-2026-87491).' },
+  { icon:'layout', name:'WebGPU / WebGL', level:'high', levelName:'Высокая', text:'Использование ошибок в новых графических API (WebGPU, WebGL) для повреждения памяти. Примеры: CVE-2026-19137, CVE-2026-11015, CVE-2026-22165.' },
+  { icon:'terminal', name:'Уязвимости расширений', level:'high', levelName:'Высокая', text:'Уязвимости в расширениях и DevTools позволяют обойти политику безопасности или выполнить код вне песочницы. Примеры: CVE-2026-113186, CVE-2026-106331.' },
+  { icon:'globe', name:'CSS-инъекции', level:'med', levelName:'Средняя', text:'Внедрение CSS для обхода политик безопасности и кражи данных (Universal CSS Injection). Примеры: CVE-2026-87550, CVE-2026-79234.' },
+  { icon:'key', name:'Storage Access API', level:'med', levelName:'Средняя', text:'Некорректная авторизация в Storage Access API позволяет обойти политику происхождения и получить доступ к данным других сайтов. Пример: CVE-2026-79005.' }
 ];
 
-/* ================= РЕКОМЕНДАЦИИ ================= */
 const RECS = {
-  driveby: { title:'Отключите автоматические загрузки',
-    text:'Включите в браузере подтверждение перед загрузкой файлов и никогда не открывайте исполняемые файлы (.exe, .msi, .apk) с незнакомых сайтов. Блокировщик рекламы с фильтрами малвари снижает риск drive-by-атак на порядок.',
-    link:'https://www.kaspersky.ru/resource-center/threats/what-is-a-drive-by-download', action:'Подробнее об угрозе' },
-  browserExploit: { title:'Обновите браузер до актуальной версии',
-    text:'Установите последнюю стабильную версию и включите автообновление. Подавляющее большинство эксплойтов работают только против устаревших версий движка.',
-    link:'https://browser-update.org/ru/', action:'Проверить обновления' },
-  plugins: { title:'Избавьтесь от устаревших плагинов',
-    text:'Flash и Java-апплеты мертвы: удалите их со всех браузеров. PDF открывайте во встроенном просмотрщике, а не в сторонних программах с собственными уязвимостями.',
-    link:'https://www.adobe.com/products/flashplayer/end-of-life.html', action:'Почему Flash опасен' },
-  xss: { title:'Усильте Content Security Policy',
-    text:'Заголовок CSP ограничивает источники скриптов и блокирует inline-выполнение. Как пользователь — установите uBlock Origin или NoScript: они отсекают большинство XSS-нагрузок.',
-    link:'https://developer.mozilla.org/ru/docs/Web/HTTP/CSP', action:'Документация CSP' },
-  csrf: { title:'Не оставайтесь авторизованным на чужих сайтах',
-    text:'CSRF эксплуатирует активные сессии. Выходите из аккаунтов после работы, а формам необходимы CSRF-токены и cookies с флагом SameSite.',
-    link:'https://owasp.org/www-community/attacks/csrf/', action:'Руководство OWASP' },
-  clickjacking: { title:'Защититесь от подмены кликов',
-    text:'Заголовки X-Frame-Options: DENY или CSP frame-ancestors запрещают встраивание страницы в чужие фреймы. Расширение NoScript дополнительно блокирует фрейминг.',
-    link:'https://developer.mozilla.org/ru/docs/Web/HTTP/Headers/X-Frame-Options', action:'Документация MDN' },
-  phishing: { title:'Проверяйте адрес, а не дизайн',
-    text:'Фишинг распознаётся по домену, а не по внешнему виду. Используйте менеджер паролей — он не введёт пароль на поддельном домене — и включите антифишинг-фильтры браузера.',
-    link:'https://www.kaspersky.ru/resource-center/threats/phishing', action:'Как распознать фишинг' },
-  spoofing: { title:'Работайте только по HTTPS',
-    text:'Никогда не вводите данные на HTTP-сайтах. Установите расширение HTTPS Everywhere и проверяйте замок в адресной строке на страницах входа и оплаты.',
-    link:'https://www.eff.org/https-everywhere', action:'HTTPS Everywhere' },
-  session: { title:'Защитите сессионные данные',
-    text:'Не используйте публичный Wi-Fi без VPN — в открытых сетях cookies перехватываются за секунды. Всегда выходите из аккаунтов на чужих устройствах.',
-    link:'https://developer.mozilla.org/ru/docs/Web/HTTP/Cookies', action:'О безопасности cookies' },
-  fingerprint: { title:'Уменьшите цифровой отпечаток',
-    text:'Отключите сторонние cookies, включите встроенную защиту от трекинга (Firefox ETP, Brave Shields) и расширение Privacy Badger. Полностью скрыть отпечаток нельзя — но можно сделать его типовым.',
-    link:'https://coveryourtracks.eff.org/', action:'Проверить отпечаток в EFF' },
-  crypto: { title:'Заблокируйте криптомайнеры',
-    text:'Фильтры uBlock Origin содержат списки известных майнеров. Если вентилятор шумит на пустой вкладке — откройте диспетчер задач браузера (Shift+Esc) и найдите виновника.',
-    link:'https://ublockorigin.com/', action:'uBlock Origin' },
-  watering: { title:'Держите блокировщик включённым везде',
-    text:'Риск «водопоя» растёт с числом сторонних скриптов на странице. Блокировщик рекламы уменьшает поверхность атаки даже на доверенных сайтах, а свежий браузер закрывает payload-эксплойты.',
-    link:'https://en.wikipedia.org/wiki/Watering_hole_attack', action:'Об атаке «Водопой»' },
-  scareware: { title:'Не верьте всплывающим «пугалкам»',
-    text:'Ни один браузер не сообщает о вирусах всплывающим окном. Закрывайте такие страницы через диспетчер задач браузера и никогда не звоните по номерам из подобных предупреждений.',
-    link:'https://www.kaspersky.ru/resource-center/threats/scareware', action:'Подробнее о scareware' },
-  bruteforce: { title:'Уникальные пароли + 2FA',
-    text:'Брутфорс бессмысленен, если пароль уникален и включена двухфакторная аутентификация. Храните пароли в менеджере и не используйте один пароль на нескольких сайтах.',
-    link:'https://www.kaspersky.ru/resource-center/definitions/brute-force-attack', action:'О брутфорс-атаках' },
-  botnet: { title:'Отзовите лишние разрешения',
-    text:'Проверьте выданные сайтам разрешения на уведомления и геолокацию — через них ботнет получает канал управления. Следите за фоновой нагрузкой сети и процессора.',
-    link:'https://www.kaspersky.ru/resource-center/threats/botnets', action:'О ботнет-сетях' },
-  /* --- новые рекомендации v3.1 --- */
-  typosquatting: { title:'Всегда проверяйте написание домена',
-    text:'Тайпосквоттеры регистрируют домены, отличающиеся на 1–2 символа от известных брендов. Менеджер паролей не заполнит форму на незнакомом домене, а закладки избавят от ручного ввода адреса.',
-    link:'https://en.wikipedia.org/wiki/Typosquatting', action:'О тайпосквоттинге' },
-  tabnabbing: { title:'Осторожнее с неактивными вкладками',
-    text:'Tabnabbing перерисовывает неактивную вкладку под страницу входа. Если вкладка «сама» просит заново ввести пароль — проверьте адрес. Разработчикам: заголовок Cross-Origin-Opener-Policy.',
-    link:'https://owasp.org/www-community/attacks/Tabnabbing', action:'OWASP о Tabnabbing' },
-  reverseTabnabbing: { title:'Добавьте rel="noopener" к ссылкам',
-    text:'Ссылки с target="_blank" без rel="noopener" позволяют открытой странице перенаправить ваш сайт. Современные браузеры ставят noopener автоматически, но явный атрибут надёжнее.',
-    link:'https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/noopener', action:'Документация MDN' },
-  sessionFixation: { title:'Не доверяйте ссылкам с session ID',
-    text:'Не переходите по ссылкам, содержащим идентификатор сессии. Разработчикам: пересоздавайте session ID после входа и устанавливайте cookie только с флагами Secure, HttpOnly и SameSite.',
-    link:'https://owasp.org/www-community/attacks/Session_fixation', action:'OWASP о Session Fixation' },
-  dnsSpoofing: { title:'Включите DNS-over-HTTPS',
-    text:'DoH шифрует DNS-запросы и защищает от подмены записей. Включите защищённый DNS в настройках браузера; владельцам сайтов обязателен HSTS.',
-    link:'https://www.cloudflare.com/learning/dns/dns-over-tls/', action:'О защищённом DNS' },
-  devtools: { title:'Никогда не вставляйте код в консоль',
-    text:'Self-XSS: мошенники убеждают вставить «волшебный» скрипт в консоль DevTools и получают доступ к аккаунту. Также настороженно относитесь к сайтам с обилием eval() и anti-debugging.',
-    link:'https://en.wikipedia.org/wiki/Self-XSS', action:'О self-XSS' },
-  uiRedressing: { title:'Не доверяйте «съехавшему» интерфейсу',
-    text:'UI redressing подменяет видимый интерфейс страницы. Если элементы управления ведут себя странно — обновите страницу и проверьте адрес. Разработчикам: frame-ancestors в CSP.',
-    link:'https://owasp.org/www-community/attacks/Clickjacking', action:'OWASP о подмене UI' },
-  heapSpray: { title:'Обновляйте браузер без исключений',
-    text:'Heap spraying эксплуатирует ошибки памяти движков. Патчи выходят каждые 4 недели — автообновление закрывает большинство таких атак. Избегайте сайтов с обфусцированными скриптами.',
-    link:'https://en.wikipedia.org/wiki/Heap_spraying', action:'О Heap Spraying' },
-  mitm: { title:'VPN в публичных сетях — обязателен',
-    text:'В открытых Wi-Fi сетях трафик может перехватываться и подменяться. Используйте только HTTPS-сайты, VPN и никогда не игнорируйте предупреждения браузера о сертификатах.',
-    link:'https://www.kaspersky.ru/resource-center/threats/man-in-the-middle-attack', action:'О MITM-атаках' },
-  aiPhishing: { title:'Не верьте идеальному тексту',
-    text:'AI-фишинг безупречен грамматически и персонализирован. Проверяйте домен отправителя, не вводите данные по ссылкам из писем и мессенджеров, включите 2FA везде, где возможно.',
-    link:'https://www.proofpoint.com/us/threat-reference/phishing', action:'Об AI-фишинге' }
+  driveby: { title:'Отключите автоматические загрузки', text:'Включите в браузере подтверждение перед загрузкой файлов и никогда не открывайте исполняемые файлы (.exe, .msi, .apk) с незнакомых сайтов. Блокировщик рекламы с фильтрами малвари снижает риск drive-by-атак на порядок.', link:'https://www.kaspersky.ru/resource-center/threats/what-is-a-drive-by-download', action:'Подробнее об угрозе' },
+  browserExploit: { title:'Обновите браузер до актуальной версии', text:'Установите последнюю стабильную версию и включите автообновление. Подавляющее большинство эксплойтов работают только против устаревших версий движка.', link:'https://browser-update.org/ru/', action:'Проверить обновления' },
+  plugins: { title:'Избавьтесь от устаревших плагинов', text:'Flash и Java-апплеты мертвы: удалите их со всех браузеров. PDF открывайте во встроенном просмотрщике, а не в сторонних программах с собственными уязвимостями.', link:'https://www.adobe.com/products/flashplayer/end-of-life.html', action:'Почему Flash опасен' },
+  xss: { title:'Усильте Content Security Policy', text:'Заголовок CSP ограничивает источники скриптов и блокирует inline-выполнение. Как пользователь — установите uBlock Origin или NoScript: они отсекают большинство XSS-нагрузок.', link:'https://developer.mozilla.org/ru/docs/Web/HTTP/CSP', action:'Документация CSP' },
+  csrf: { title:'Не оставайтесь авторизованным на чужих сайтах', text:'CSRF эксплуатирует активные сессии. Выходите из аккаунтов после работы, а формам необходимы CSRF-токены и cookies с флагом SameSite.', link:'https://owasp.org/www-community/attacks/csrf/', action:'Руководство OWASP' },
+  clickjacking: { title:'Защититесь от подмены кликов', text:'Заголовки X-Frame-Options: DENY или CSP frame-ancestors запрещают встраивание страницы в чужие фреймы. Расширение NoScript дополнительно блокирует фрейминг.', link:'https://developer.mozilla.org/ru/docs/Web/HTTP/Headers/X-Frame-Options', action:'Документация MDN' },
+  phishing: { title:'Проверяйте адрес, а не дизайн', text:'Фишинг распознаётся по домену, а не по внешнему виду. Используйте менеджер паролей — он не введёт пароль на поддельном домене — и включите антифишинг-фильтры браузера.', link:'https://www.kaspersky.ru/resource-center/threats/phishing', action:'Как распознать фишинг' },
+  spoofing: { title:'Работайте только по HTTPS', text:'Никогда не вводите данные на HTTP-сайтах. Установите HTTPS Everywhere и проверяйте замок в адресной строке на страницах входа и оплаты.', link:'https://www.eff.org/https-everywhere', action:'HTTPS Everywhere' },
+  session: { title:'Защитите сессионные данные', text:'Не используйте публичный Wi-Fi без VPN — в открытых сетях cookies перехватываются за секунды. Всегда выходите из аккаунтов на чужих устройствах.', link:'https://developer.mozilla.org/ru/docs/Web/HTTP/Cookies', action:'О безопасности cookies' },
+  fingerprint: { title:'Уменьшите цифровой отпечаток', text:'Отключите сторонние cookies, включите встроенную защиту от трекинга (Firefox ETP, Brave Shields) и расширение Privacy Badger. Полностью скрыть отпечаток нельзя — но можно сделать его типовым.', link:'https://coveryourtracks.eff.org/', action:'Проверить отпечаток в EFF' },
+  crypto: { title:'Заблокируйте криптомайнеры', text:'Фильтры uBlock Origin содержат списки известных майнеров. Если вентилятор шумит на пустой вкладке — откройте диспетчер задач браузера (Shift+Esc) и найдите виновника.', link:'https://ublockorigin.com/', action:'uBlock Origin' },
+  watering: { title:'Держите блокировщик включённым везде', text:'Риск «водопоя» растёт с числом сторонних скриптов на странице. Блокировщик рекламы уменьшает поверхность атаки даже на доверенных сайтах, а свежий браузер закрывает payload-эксплойты.', link:'https://en.wikipedia.org/wiki/Watering_hole_attack', action:'Об атаке «Водопой»' },
+  scareware: { title:'Не верьте всплывающим «пугалкам»', text:'Ни один браузер не сообщает о вирусах всплывающим окном. Закрывайте такие страницы через диспетчер задач браузера и никогда не звоните по номерам из подобных предупреждений.', link:'https://www.kaspersky.ru/resource-center/threats/scareware', action:'Подробнее о scareware' },
+  bruteforce: { title:'Уникальные пароли и 2FA', text:'Брутфорс бессмысленен, если пароль уникален и включена двухфакторная аутентификация. Храните пароли в менеджере и не используйте один пароль на нескольких сайтах.', link:'https://www.kaspersky.ru/resource-center/definitions/brute-force-attack', action:'О брутфорс-атаках' },
+  botnet: { title:'Отзовите лишние разрешения', text:'Проверьте выданные сайтам разрешения на уведомления и геолокацию — через них ботнет получает канал управления. Следите за фоновой нагрузкой сети и процессора.', link:'https://www.kaspersky.ru/resource-center/threats/botnets', action:'О ботнет-сетях' },
+  typosquatting: { title:'Всегда проверяйте написание домена', text:'Тайпосквоттеры регистрируют домены, отличающиеся на 1–2 символа от известных брендов. Менеджер паролей не заполнит форму на незнакомом домене, а закладки избавят от ручного ввода адреса.', link:'https://en.wikipedia.org/wiki/Typosquatting', action:'О тайпосквоттинге' },
+  tabnabbing: { title:'Осторожнее с неактивными вкладками', text:'Tabnabbing перерисовывает неактивную вкладку под страницу входа. Если вкладка «сама» просит заново ввести пароль — проверьте адрес. Разработчикам: заголовок Cross-Origin-Opener-Policy.', link:'https://owasp.org/www-community/attacks/Tabnabbing', action:'OWASP о Tabnabbing' },
+  reverseTabnabbing: { title:'Добавьте rel="noopener" к ссылкам', text:'Ссылки с target="_blank" без rel="noopener" позволяют открытой странице перенаправить ваш сайт. Современные браузеры ставят noopener автоматически, но явный атрибут надёжнее.', link:'https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/noopener', action:'Документация MDN' },
+  sessionFixation: { title:'Не доверяйте ссылкам с session ID', text:'Не переходите по ссылкам, содержащим идентификатор сессии. Разработчикам: пересоздавайте session ID после входа и устанавливайте cookie только с флагами Secure, HttpOnly и SameSite.', link:'https://owasp.org/www-community/attacks/Session_fixation', action:'OWASP о Session Fixation' },
+  dnsSpoofing: { title:'Включите DNS-over-HTTPS', text:'DoH шифрует DNS-запросы и защищает от подмены записей. Включите защищённый DNS в настройках браузера; владельцам сайтов обязателен HSTS.', link:'https://www.cloudflare.com/learning/dns/dns-over-tls/', action:'О защищённом DNS' },
+  devtools: { title:'Никогда не вставляйте код в консоль', text:'Self-XSS: мошенники убеждают вставить «волшебный» скрипт в консоль DevTools и получают доступ к аккаунту. Также настороженно относитесь к сайтам с обилием eval() и anti-debugging.', link:'https://en.wikipedia.org/wiki/Self-XSS', action:'О self-XSS' },
+  uiRedressing: { title:'Не доверяйте «съехавшему» интерфейсу', text:'UI redressing подменяет видимый интерфейс страницы. Если элементы управления ведут себя странно — обновите страницу и проверьте адрес. Разработчикам: frame-ancestors в CSP.', link:'https://owasp.org/www-community/attacks/Clickjacking', action:'OWASP о подмене UI' },
+  heapSpray: { title:'Обновляйте браузер без исключений', text:'Heap spraying эксплуатирует ошибки памяти движков. Патчи выходят каждые 4 недели — автообновление закрывает большинство таких атак. Избегайте сайтов с обфусцированными скриптами.', link:'https://en.wikipedia.org/wiki/Heap_spraying', action:'О Heap Spraying' },
+  mitm: { title:'VPN в публичных сетях — обязателен', text:'В открытых Wi-Fi сетях трафик может перехватываться и подменяться. Используйте только HTTPS-сайты, VPN и никогда не игнорируйте предупреждения браузера о сертификатах.', link:'https://www.kaspersky.ru/resource-center/threats/man-in-the-middle-attack', action:'О MITM-атаках' },
+  aiPhishing: { title:'Не верьте идеальному тексту', text:'AI-фишинг безупречен грамматически и персонализирован. Проверяйте домен отправителя, не вводите данные по ссылкам из писем и мессенджеров, включите 2FA везде, где возможно.', link:'https://www.proofpoint.com/us/threat-reference/phishing', action:'Об AI-фишинге' },
+  v8Exploits: { title:'Обновляйте браузер немедленно', text:'V8/JIT-эксплойты (type confusion, use-after-free) — самый популярный вектор атак в 2026 году (CVE-2026-85046, CVE-2026-87491, CVE-2026-106341). Google и Mozilla выпускают патчи каждые несколько недель. Включите автообновление и не откладывайте установку обновлений безопасности.', link:'https://chromereleases.googleblog.com/', action:'Список обновлений Chrome' },
+  wasmEscape: { title:'Не отключайте защиту Wasm', text:'Современные браузеры используют песочницу для WebAssembly. Не отключайте её и не используйте флаги, снижающие изоляцию. Регулярно обновляйте браузер — исправления для Wasm-уязвимостей (CVE-2026-87491) выходят вместе с патчами для V8.', link:'https://webassembly.org/', action:'О технологии WebAssembly' },
+  webgpuVulns: { title:'Осторожно с WebGPU на незнакомых сайтах', text:'WebGPU — мощный, но новый API с растущим числом уязвимостей (CVE-2026-11015, CVE-2026-22165, CVE-2026-19137). Если вы не используете 3D-графику в браузере, можно отключить WebGPU в настройках (chrome://flags) для снижения риска.', link:'https://developer.chrome.com/docs/web-platform/webgpu', action:'Документация WebGPU' },
+  devtoolsExtensions: { title:'Проверяйте расширения', text:'Уязвимости в расширениях (CVE-2026-106331, CVE-2026-113186) и DevTools могут привести к выполнению кода вне песочницы. Удалите неиспользуемые расширения и не открывайте консоль разработчика на подозрительных страницах, если вас об этом просят.', link:'https://developer.chrome.com/docs/extensions/develop', action:'Безопасность расширений' },
+  cssInjection: { title:'Ограничьте CSS-инъекции', text:'CSS-инъекции (CVE-2026-87550, CVE-2026-79234) могут использоваться для кражи данных. Установите расширение, блокирующее сторонние стили (uBlock Origin в режиме medium mode), и не отключайте встроенную защиту браузера.', link:'https://ublockorigin.com/', action:'uBlock Origin' },
+  storageAccessApi: { title:'Следите за разрешениями Storage Access API', text:'Storage Access API позволяет обходить блокировку сторонних cookie, а уязвимость CVE-2026-79005 позволяет обойти политику происхождения. Проверяйте, какие сайты запрашивают это разрешение, и не предоставляйте его без необходимости.', link:'https://developer.mozilla.org/en-US/docs/Web/API/Storage_Access_API', action:'Документация Storage Access API' }
 };
 
-/* ================= УТИЛИТЫ ================= */
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-/* Расстояние Левенштейна — для проверки тайпосквоттинга */
 function levenshtein(a, b) {
   const m = a.length, n = b.length;
   if (!m) return n;
@@ -197,10 +123,8 @@ function levenshtein(a, b) {
   return prev[n];
 }
 
-/* Известные бренды для детекции доменов-двойников */
 const POPULAR_DOMAINS = ['google','yandex','youtube','gmail','vk','mail','sberbank','sber','tinkoff','gosuslugi','wildberries','ozon','avito','telegram','whatsapp','facebook','instagram','apple','microsoft','paypal','amazon','wikipedia','kinopoisk'];
 
-/* ================= ПРОВЕРКИ (1–15, базовый набор) ================= */
 async function checkDriveBy() {
   const findings = []; let safety = 100;
   const frames = [...document.querySelectorAll('iframe, frame')];
@@ -227,7 +151,7 @@ async function checkBrowserExploit() {
   else if (chr) { name = 'Google Chrome'; ver = +chr[1]; engine = 'Blink / Chromium'; }
   else if (ff) { name = 'Mozilla Firefox'; ver = +ff[1]; engine = 'Gecko'; }
   else if (saf) { name = 'Safari'; ver = +saf[1]; engine = 'WebKit'; }
-  const min = { 'Google Chrome':134, 'Microsoft Edge':134, 'Mozilla Firefox':136, 'Safari':17 }[name];
+  const min = { 'Google Chrome':156, 'Microsoft Edge':156, 'Mozilla Firefox':159, 'Safari':19 }[name];
   if (min && ver < min) {
     safety -= clamp((min - ver) * 12, 20, 90);
     findings.push(`${name} ${ver} устарел: актуальная ветка — ${min}+. Старые версии содержат известные эксплойты`);
@@ -358,8 +282,8 @@ async function checkFingerprint() {
   try {
     const c = document.createElement('canvas'); c.width = 220; c.height = 30;
     const x = c.getContext('2d');
-    x.textBaseline = 'top'; x.font = '14px Arial'; x.fillStyle = '#f60'; x.fillRect(0, 0, 140, 28);
-    x.fillStyle = '#069'; x.fillText('Digital Shield 2026', 2, 2);
+    x.textBaseline = 'top'; x.font = '14px Arial'; x.fillStyle = '#333'; x.fillRect(0, 0, 140, 28);
+    x.fillStyle = '#000'; x.fillText('Digital Shield 2026', 2, 2);
     const d = c.toDataURL(); let h = 0;
     for (let i = 0; i < d.length; i++) h = (h * 31 + d.charCodeAt(i)) >>> 0;
     safety -= 15; findings.push(`Canvas-отпечаток доступен (хеш ${h.toString(16).slice(0, 6)}) — сайты могут идентифицировать браузер`);
@@ -472,9 +396,6 @@ async function checkBotnet() {
   return { safety: clamp(safety, 0, 100), findings };
 }
 
-/* ================= НОВЫЕ ПРОВЕРКИ (16–25, v3.1) ================= */
-
-/* 16. Typosquatting — домены-двойники известных брендов */
 async function checkTyposquatting() {
   const findings = []; let pts = 0;
   const host = location.hostname.toLowerCase();
@@ -515,7 +436,6 @@ async function checkTyposquatting() {
   return { safety: clamp(100 - pts, 0, 100), findings };
 }
 
-/* 17. Tabnabbing — подмена неактивной вкладки */
 async function checkTabnabbing(ctx) {
   const findings = []; let safety = 100;
   let opener = null;
@@ -538,7 +458,6 @@ async function checkTabnabbing(ctx) {
   return { safety: clamp(safety, 0, 100), findings };
 }
 
-/* 18. Reverse Tabnabbing — перенаправление родительской вкладки */
 async function checkReverseTabnabbing() {
   const findings = []; let safety = 100;
   let opener = null;
@@ -565,7 +484,6 @@ async function checkReverseTabnabbing() {
   return { safety: clamp(safety, 0, 100), findings };
 }
 
-/* 19. Session Fixation — навязывание идентификатора сессии */
 async function checkSessionFixation() {
   const findings = []; let safety = 100;
   if (/(jsessionid|phpsessid|sid=|session_id=|sessionid=)/i.test(location.href)) {
@@ -587,7 +505,6 @@ async function checkSessionFixation() {
   return { safety: clamp(safety, 0, 100), findings };
 }
 
-/* 20. DNS Spoofing — подмена DNS-записей */
 async function checkDNSSpoofing(ctx) {
   const findings = []; let safety = 100;
   if (location.protocol === 'http:') {
@@ -611,7 +528,6 @@ async function checkDNSSpoofing(ctx) {
   return { safety: clamp(safety, 0, 100), findings };
 }
 
-/* 21. DevTools-атаки — self-XSS, anti-debug, подмена консоли */
 async function checkDevTools() {
   const findings = []; let safety = 100;
   let debuggerCount = 0, evalCount = 0, consoleOverride = 0;
@@ -629,7 +545,6 @@ async function checkDevTools() {
   return { safety: clamp(safety, 0, 100), findings };
 }
 
-/* 22. UI Redressing — подмена видимого интерфейса */
 async function checkUIRedressing(ctx) {
   const findings = []; let safety = 100;
   if (window.self !== window.top) { safety -= 45; findings.push('Страница отображается во фрейме — возможна подмена интерфейса (UI redressing)'); }
@@ -651,7 +566,6 @@ async function checkUIRedressing(ctx) {
   return { safety: clamp(safety, 0, 100), findings };
 }
 
-/* 23. Heap Spraying — распыление вредоносного кода в памяти */
 async function checkHeapSpray() {
   const findings = []; let safety = 100;
   let bigInline = 0, base64Blobs = 0, typedArrayUse = 0;
@@ -670,7 +584,6 @@ async function checkHeapSpray() {
   return { safety: clamp(safety, 0, 100), findings };
 }
 
-/* 24. Man-in-the-Middle — перехват трафика */
 async function checkMITM(ctx) {
   const findings = []; let safety = 100;
   if (location.protocol === 'https:') {
@@ -694,7 +607,6 @@ async function checkMITM(ctx) {
   return { safety: clamp(safety, 0, 100), findings };
 }
 
-/* 25. AI-Powered Phishing — фишинг, сгенерированный нейросетями */
 async function checkAIPhishing() {
   const findings = []; let pts = 0;
   const sensitive = document.querySelectorAll(
@@ -724,42 +636,174 @@ async function checkAIPhishing() {
   return { safety: clamp(100 - pts, 0, 100), findings };
 }
 
-/* ================= РЕЕСТР ПРОВЕРОК ================= */
+async function checkV8Exploits() {
+  const findings = []; let safety = 100;
+  const ua = navigator.userAgent;
+  let browserName = 'Unknown', version = 0;
+  const edg = ua.match(/Edg\/(\d+)/);
+  const chr = ua.match(/Chrome\/(\d+)/);
+  const ff = ua.match(/Firefox\/(\d+)/);
+  if (edg) { browserName = 'Edge'; version = +edg[1]; }
+  else if (chr) { browserName = 'Chrome'; version = +chr[1]; }
+  else if (ff) { browserName = 'Firefox'; version = +ff[1]; }
+  const minSafe = { 'Chrome': 156, 'Edge': 156, 'Firefox': 159 };
+  if (minSafe[browserName] && version < minSafe[browserName]) {
+    const gap = minSafe[browserName] - version;
+    safety -= clamp(gap * 15, 30, 95);
+    findings.push(`${browserName} ${version} уязвим к V8/JIT-эксплойтам 2026 года (CVE-2026-85046, CVE-2026-87491, CVE-2026-106341). Обновитесь до версии ${minSafe[browserName]}+.`);
+  } else if (version > 0) {
+    findings.push(`${browserName} ${version} — версия содержит исправления для известных V8/JIT-уязвимостей 2026 года.`);
+  } else {
+    safety -= 20;
+    findings.push('Не удалось определить версию браузера для проверки на V8/JIT-уязвимости.');
+  }
+  if (typeof WebAssembly === 'object') {
+    findings.push('WebAssembly доступен — часто используется в эксплойт-цепочках (например, CVE-2026-87491).');
+  }
+  if (safety === 100) findings.push('Прямых признаков уязвимости к V8/JIT-эксплойтам не обнаружено.');
+  return { safety: clamp(safety, 0, 100), findings };
+}
+
+async function checkWasmEscape(ctx) {
+  const findings = []; let safety = 100;
+  if (typeof WebAssembly === 'undefined') {
+    findings.push('WebAssembly отключён. Риск эксплуатации Wasm-уязвимостей (CVE-2026-87491) сведён к нулю, но часть сайтов может не работать.');
+  } else {
+    findings.push('WebAssembly включён. Это стандарт, но уязвимости в Wasm (CVE-2026-87491) используются для выхода из песочницы браузера.');
+    if (ctx.headers) {
+      const coop = ctx.headers.get('cross-origin-opener-policy');
+      const coep = ctx.headers.get('cross-origin-embedder-policy');
+      if (coop && coep) {
+        findings.push('Заголовки COOP и COEP обнаружены. Cross-Origin Isolation активна, что значительно усложняет эксплуатацию Wasm-уязвимостей.');
+      } else {
+        safety -= 10;
+        findings.push('Заголовки COOP/COEP не найдены. Cross-Origin Isolation не активна, что упрощает потенциальную эксплуатацию.');
+      }
+    }
+  }
+  return { safety: clamp(safety, 0, 100), findings };
+}
+
+async function checkWebGPUVulns() {
+  const findings = []; let safety = 100;
+  if (navigator.gpu) {
+    findings.push('WebGPU доступен. В 2026 году в нём найдено несколько уязвимостей (CVE-2026-11015, CVE-2026-22165).');
+    safety -= 15;
+  } else {
+    findings.push('WebGPU недоступен. Риск уязвимостей WebGPU отсутствует.');
+  }
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (gl) {
+      findings.push('WebGL активен. В 2026 году в компонентах WebGL/ANGLE было множество критических уязвимостей (CVE-2026-19137, CVE-2026-19170).');
+      safety -= 10;
+    }
+  } catch (e) {}
+  if (safety === 100) findings.push('Риски, связанные с WebGPU/WebGL, минимальны.');
+  else findings.push('Рекомендация: обновите браузер и драйверы видеокарты. Без необходимости не используйте сайты, активно нагружающие GPU.');
+  return { safety: clamp(safety, 0, 100), findings };
+}
+
+async function checkDevToolsExtensions() {
+  const findings = []; let safety = 100;
+  if (typeof console !== 'undefined' && console.profile) {
+    findings.push('DevTools доступны. В 2026 году были уязвимости в самом компоненте DevTools (CVE-2026-113186), позволяющие выполнить код вне песочницы.');
+    safety -= 10;
+  }
+  try {
+    if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id) {
+      findings.push('Обнаружены расширения браузера. Уязвимости в расширениях (CVE-2026-106331) могут привести к краже данных или выполнению кода.');
+      safety -= 15;
+    }
+  } catch (e) {}
+  if (safety === 100) findings.push('Явных признаков уязвимости через DevTools или расширения не найдено.');
+  findings.push('Совет: удалите неиспользуемые расширения и не выполняйте код в консоли DevTools по просьбе сайтов.');
+  return { safety: clamp(safety, 0, 100), findings };
+}
+
+async function checkCSSInjection(ctx) {
+  const findings = []; let safety = 100;
+  const styleTags = document.querySelectorAll('style');
+  let suspiciousRules = 0;
+  styleTags.forEach(tag => {
+    if (/@import|url\s*\(/i.test(tag.textContent)) suspiciousRules++;
+  });
+  if (suspiciousRules > 0) {
+    safety -= clamp(suspiciousRules * 10, 10, 40);
+    findings.push(`Обнаружены CSS-правила с @import или url() (${suspiciousRules}). В 2026 году актуальны атаки через CSS-инъекции (CVE-2026-87550, CVE-2026-79234).`);
+  } else {
+    findings.push('Подозрительных CSS-правил, характерных для инъекций, не найдено.');
+  }
+  if (ctx.headers) {
+    const csp = ctx.headers.get('content-security-policy');
+    if (csp && /style-src/i.test(csp)) {
+      findings.push('CSP ограничивает источники стилей — риск CSS-инъекций снижен.');
+    } else {
+      safety -= 10;
+      findings.push('CSP не ограничивает источники стилей. Рекомендуется директива style-src.');
+    }
+  }
+  return { safety: clamp(safety, 0, 100), findings };
+}
+
+async function checkStorageAccessAPI(ctx) {
+  const findings = []; let safety = 100;
+  if (document.requestStorageAccess) {
+    findings.push('Storage Access API доступен. В 2026 году были уязвимости (CVE-2026-79005), позволяющие обойти политику происхождения.');
+    if (ctx.headers) {
+      const coop = ctx.headers.get('cross-origin-opener-policy');
+      if (coop === 'same-origin') {
+        findings.push('COOP: same-origin усиливает изоляцию и снижает риск, связанный с Storage Access API.');
+      } else {
+        safety -= 15;
+        findings.push('COOP не установлен в same-origin. Рекомендуется для изоляции.');
+      }
+    }
+  } else {
+    findings.push('Storage Access API не используется на этой странице.');
+  }
+  return { safety: clamp(safety, 0, 100), findings };
+}
+
 const CHECKS = [
-  { id:'driveby',         name:'Drive-by Download',   sub:'Скрытые загрузки',           icon:'download',    weight:1.2, run:checkDriveBy },
-  { id:'browserExploit',  name:'Эксплойты браузера',  sub:'Chromium · WebKit · Gecko',  icon:'bug',         weight:1.5, run:checkBrowserExploit },
-  { id:'plugins',         name:'Эксплойты плагинов',  sub:'Flash · Java · PDF',         icon:'plug',        weight:1.0, run:checkPlugins },
-  { id:'xss',             name:'XSS',                 sub:'Межсайтовый скриптинг',      icon:'code',        weight:1.1, run:checkXSS },
-  { id:'csrf',            name:'CSRF',                sub:'Подделка запросов',          icon:'refresh',     weight:0.8, run:checkCSRF },
-  { id:'clickjacking',    name:'Кликджекинг',         sub:'Подмена кликов',             icon:'cursor',      weight:0.9, run:checkClickjacking },
-  { id:'phishing',        name:'Фишинг',              sub:'Поддельные страницы входа',  icon:'fish',        weight:1.2, run:checkPhishing },
-  { id:'spoofing',        name:'Спуфинг',             sub:'Адресная строка · SSL',      icon:'browserLock', weight:1.0, run:checkSpoofing },
-  { id:'session',         name:'Session Hijacking',   sub:'Кража cookies и сессий',     icon:'cookie',      weight:1.2, run:checkSession },
-  { id:'fingerprint',     name:'Fingerprinting',      sub:'Цифровой отпечаток',         icon:'fingerprint', weight:0.7, run:checkFingerprint },
-  { id:'crypto',          name:'Криптоджекинг',       sub:'Скрытый майнинг',            icon:'cpu',         weight:1.0, run:checkCrypto },
-  { id:'watering',        name:'Атака «Водопой»',     sub:'Заражённые ресурсы',         icon:'target',      weight:0.8, run:checkWateringHole },
-  { id:'scareware',       name:'Scareware',           sub:'Запугивание «лечением»',     icon:'alert',       weight:0.9, run:checkScareware },
-  { id:'bruteforce',      name:'Брутфорс',            sub:'Подбор паролей',             icon:'key',         weight:0.7, run:checkBruteforce },
-  { id:'botnet',          name:'Ботнет',              sub:'Устройство как прокси',      icon:'network',     weight:0.8, run:checkBotnet },
-  /* --- v3.1 --- */
-  { id:'typosquatting',     name:'Typosquatting',      sub:'Опечаточные домены',         icon:'type',     weight:1.1, run:checkTyposquatting },
-  { id:'tabnabbing',        name:'Tabnabbing',         sub:'Подмена неактивной вкладки', icon:'tabs',     weight:0.8, run:checkTabnabbing },
-  { id:'reverseTabnabbing', name:'Reverse Tabnabbing', sub:'Перенаправление родителя',   icon:'tabBack',  weight:0.8, run:checkReverseTabnabbing },
-  { id:'sessionFixation',   name:'Session Fixation',   sub:'Навязывание сессии',         icon:'pin',      weight:1.0, run:checkSessionFixation },
-  { id:'dnsSpoofing',       name:'DNS Spoofing',       sub:'Подмена DNS-записей',        icon:'globe',    weight:1.0, run:checkDNSSpoofing },
-  { id:'devtools',          name:'DevTools-атаки',     sub:'Консоль и self-XSS',         icon:'terminal', weight:0.7, run:checkDevTools },
-  { id:'uiRedressing',      name:'UI Redressing',      sub:'Подмена интерфейса',         icon:'layout',   weight:0.9, run:checkUIRedressing },
-  { id:'heapSpray',         name:'Heap Spraying',      sub:'Распыление в памяти',        icon:'layers',   weight:0.9, run:checkHeapSpray },
-  { id:'mitm',              name:'Man-in-the-Middle',  sub:'Перехват трафика',           icon:'split',    weight:1.3, run:checkMITM },
-  { id:'aiPhishing',        name:'AI-фишинг',          sub:'Атаки с генеративным ИИ',    icon:'bot',      weight:1.2, run:checkAIPhishing }
+  { id:'driveby', name:'Drive-by Download', sub:'Скрытые загрузки', icon:'download', weight:1.2, run:checkDriveBy },
+  { id:'browserExploit', name:'Эксплойты браузера', sub:'Chromium · WebKit · Gecko', icon:'bug', weight:1.5, run:checkBrowserExploit },
+  { id:'plugins', name:'Эксплойты плагинов', sub:'Flash · Java · PDF', icon:'plug', weight:1.0, run:checkPlugins },
+  { id:'xss', name:'XSS', sub:'Межсайтовый скриптинг', icon:'code', weight:1.1, run:checkXSS },
+  { id:'csrf', name:'CSRF', sub:'Подделка запросов', icon:'refresh', weight:0.8, run:checkCSRF },
+  { id:'clickjacking', name:'Кликджекинг', sub:'Подмена кликов', icon:'cursor', weight:0.9, run:checkClickjacking },
+  { id:'phishing', name:'Фишинг', sub:'Поддельные страницы входа', icon:'fish', weight:1.2, run:checkPhishing },
+  { id:'spoofing', name:'Спуфинг', sub:'Адресная строка · SSL', icon:'browserLock', weight:1.0, run:checkSpoofing },
+  { id:'session', name:'Session Hijacking', sub:'Кража cookies и сессий', icon:'cookie', weight:1.2, run:checkSession },
+  { id:'fingerprint', name:'Fingerprinting', sub:'Цифровой отпечаток', icon:'fingerprint', weight:0.7, run:checkFingerprint },
+  { id:'crypto', name:'Криптоджекинг', sub:'Скрытый майнинг', icon:'cpu', weight:1.0, run:checkCrypto },
+  { id:'watering', name:'Атака «Водопой»', sub:'Заражённые ресурсы', icon:'target', weight:0.8, run:checkWateringHole },
+  { id:'scareware', name:'Scareware', sub:'Запугивание «лечением»', icon:'alert', weight:0.9, run:checkScareware },
+  { id:'bruteforce', name:'Брутфорс', sub:'Подбор паролей', icon:'key', weight:0.7, run:checkBruteforce },
+  { id:'botnet', name:'Ботнет', sub:'Устройство как прокси', icon:'network', weight:0.8, run:checkBotnet },
+  { id:'typosquatting', name:'Typosquatting', sub:'Опечаточные домены', icon:'type', weight:1.1, run:checkTyposquatting },
+  { id:'tabnabbing', name:'Tabnabbing', sub:'Подмена неактивной вкладки', icon:'tabs', weight:0.8, run:checkTabnabbing },
+  { id:'reverseTabnabbing', name:'Reverse Tabnabbing', sub:'Перенаправление родителя', icon:'tabBack', weight:0.8, run:checkReverseTabnabbing },
+  { id:'sessionFixation', name:'Session Fixation', sub:'Навязывание сессии', icon:'pin', weight:1.0, run:checkSessionFixation },
+  { id:'dnsSpoofing', name:'DNS Spoofing', sub:'Подмена DNS-записей', icon:'globe', weight:1.0, run:checkDNSSpoofing },
+  { id:'devtools', name:'DevTools-атаки', sub:'Консоль и self-XSS', icon:'terminal', weight:0.7, run:checkDevTools },
+  { id:'uiRedressing', name:'UI Redressing', sub:'Подмена интерфейса', icon:'layout', weight:0.9, run:checkUIRedressing },
+  { id:'heapSpray', name:'Heap Spraying', sub:'Распыление в памяти', icon:'layers', weight:0.9, run:checkHeapSpray },
+  { id:'mitm', name:'Man-in-the-Middle', sub:'Перехват трафика', icon:'split', weight:1.3, run:checkMITM },
+  { id:'aiPhishing', name:'AI-фишинг', sub:'Атаки с генеративным ИИ', icon:'bot', weight:1.2, run:checkAIPhishing },
+  { id:'v8Exploits', name:'V8 / JIT-эксплойты', sub:'Type confusion · UAF · RCE', icon:'cpu', weight:1.6, run:checkV8Exploits },
+  { id:'wasmEscape', name:'Wasm Sandbox Escape', sub:'Выход из песочницы Wasm', icon:'layers', weight:1.4, run:checkWasmEscape },
+  { id:'webgpuVulns', name:'WebGPU / WebGL', sub:'Уязвимости GPU-API', icon:'layout', weight:1.2, run:checkWebGPUVulns },
+  { id:'devtoolsExtensions', name:'DevTools и расширения', sub:'Код вне песочницы', icon:'terminal', weight:1.1, run:checkDevToolsExtensions },
+  { id:'cssInjection', name:'CSS-инъекции', sub:'Утечка данных через CSS', icon:'globe', weight:1.0, run:checkCSSInjection },
+  { id:'storageAccessApi', name:'Storage Access API', sub:'Обход политики происхождения', icon:'key', weight:0.9, run:checkStorageAccessAPI }
 ];
 
-/* ================= DOM / СОСТОЯНИЕ ================= */
 const $ = sel => document.querySelector(sel);
 const state = { running: false };
 let elDot, elStatusText, elProgress, elPercent, elTerm, elScannerCard;
 
-/* ================= УТИЛИТЫ UI ================= */
 function log(msg, type = 'info') {
   const t = new Date().toTimeString().slice(0, 8);
   const line = document.createElement('div');
@@ -782,34 +826,28 @@ function statusOf(safety) {
 }
 
 const STATUS_LABEL = { low:'Низкий риск', med:'Средний риск', high:'Высокий риск' };
-const LOG_ICON     = { low:'✓', med:'▲', high:'✕' };
+const LOG_MARK = { low:'[OK]', med:'[!]', high:'[X]' };
 
 function verdictFor(v) {
-  if (v < 15) return { t:'Минимальный уровень уязвимости', c:['#34d399','#34d399'],
-    d:'Ваш браузер соответствует актуальным стандартам защиты 2026 года. Продолжайте обновлять ПО и соблюдать цифровую гигиену.' };
-  if (v < 35) return { t:'Низкий уровень уязвимости', c:['#34d399','#a3e635'],
-    d:'Базовая защита присутствует, но отдельные векторы атак остаются открытыми. Изучите рекомендации ниже.' };
-  if (v < 55) return { t:'Средний уровень уязвимости', c:['#fbbf24','#fb923c'],
-    d:'Часть критичных механизмов защиты отсутствует или настроена неправильно. Примите меры в ближайшее время.' };
-  if (v < 75) return { t:'Высокий уровень уязвимости', c:['#fb923c','#fb7185'],
-    d:'Ваш браузер — удобная мишень для атак. Настоятельно выполните рекомендации из списка.' };
-  return { t:'Критический уровень уязвимости', c:['#fb7185','#fb7185'],
-    d:'Немедленно обновите браузер и примените все рекомендации. Работа в интернете в таком состоянии опасна.' };
+  if (v < 15) return { t:'Минимальный уровень уязвимости', d:'Ваш браузер соответствует актуальным стандартам защиты. Продолжайте обновлять ПО и соблюдать цифровую гигиену.' };
+  if (v < 35) return { t:'Низкий уровень уязвимости', d:'Базовая защита присутствует, но отдельные векторы атак остаются открытыми. Изучите рекомендации ниже.' };
+  if (v < 55) return { t:'Средний уровень уязвимости', d:'Часть критичных механизмов защиты отсутствует или настроена неправильно. Примите меры в ближайшее время.' };
+  if (v < 75) return { t:'Высокий уровень уязвимости', d:'Ваш браузер — удобная мишень для атак. Настоятельно выполните рекомендации из списка.' };
+  return { t:'Критический уровень уязвимости', d:'Немедленно обновите браузер и примените все рекомендации. Работа в интернете в таком состоянии опасна.' };
 }
 
-/* ================= МОДАЛЬНОЕ ОКНО СОГЛАСИЯ ================= */
 function openModal() {
+  document.body.classList.add('modal-open');
   $('#consentModal').classList.add('open');
   $('#consentBox').checked = false;
   $('#startScanBtn').disabled = true;
-  document.body.style.overflow = 'hidden';
-}
-function closeModal() {
-  $('#consentModal').classList.remove('open');
-  document.body.style.overflow = '';
 }
 
-/* ================= АУДИТ ================= */
+function closeModal() {
+  document.body.classList.remove('modal-open');
+  $('#consentModal').classList.remove('open');
+}
+
 async function fetchHeaders() {
   try {
     const res = await fetch(location.href, { method: 'HEAD', cache: 'no-store' });
@@ -820,10 +858,8 @@ async function fetchHeaders() {
 async function runAudit() {
   if (state.running) return;
   state.running = true;
-
   const start = performance.now();
   const results = {};
-
   elTerm.innerHTML = '';
   elScannerCard.classList.add('scanning');
   elDot.className = 'status-dot scanning';
@@ -831,20 +867,16 @@ async function runAudit() {
   $('#resultsSection').hidden = true;
   $('#recsSection').hidden = true;
   setProgress(0, CHECKS.length);
-
-  log('Инициализация аудит-движка v3.1…', 'run');
+  log('Инициализация аудит-движка…', 'run');
   await sleep(300);
-
   log('Запрос заголовков безопасности (HEAD ' + esc(location.host || 'localhost') + ')…', 'dim');
   const headers = await fetchHeaders();
   log(headers ? 'Заголовки ответа получены' : 'Заголовки недоступны (CORS / file://) — режим частичной проверки', headers ? 'ok' : 'warn');
   await sleep(350);
-
   const ctx = { headers };
   let done = 0;
-
   for (const meta of CHECKS) {
-    log(`▸ Проверка: ${esc(meta.name)}…`, 'run');
+    log(`Проверка: ${esc(meta.name)}…`, 'run');
     let res;
     try {
       res = await meta.run(ctx);
@@ -853,30 +885,24 @@ async function runAudit() {
     }
     results[meta.id] = res;
     const st = statusOf(res.safety);
-    log(`&nbsp;&nbsp;${LOG_ICON[st]} ${esc(meta.name)}: ${STATUS_LABEL[st]} (риск ${100 - res.safety}%)`, st === 'low' ? 'ok' : st === 'med' ? 'warn' : 'fail');
+    log(`${LOG_MARK[st]} ${esc(meta.name)}: ${STATUS_LABEL[st]} (риск ${100 - res.safety}%)`, st === 'low' ? 'ok' : st === 'med' ? 'warn' : 'fail');
     done++;
     setProgress(done, CHECKS.length);
     await sleep(180 + Math.random() * 220);
   }
-
   elScannerCard.classList.remove('scanning');
   elDot.className = 'status-dot complete';
   elStatusText.textContent = 'Аудит завершён';
-
   const seconds = ((performance.now() - start) / 1000).toFixed(1);
   log(`Готово за ${seconds} c · проверок: ${CHECKS.length}/${CHECKS.length}`, 'info');
-
   renderResults(results);
   renderRecommendations(results);
-
   $('#resultsSection').hidden = false;
   $('#recsSection').hidden = false;
   setTimeout(() => $('#resultsSection').scrollIntoView({ behavior:'smooth', block:'start' }), 150);
-
   state.running = false;
 }
 
-/* ================= РЕНДЕР РЕЗУЛЬТАТОВ ================= */
 function renderResults(results) {
   let riskSum = 0, wSum = 0, pass = 0, warn = 0, fail = 0;
   CHECKS.forEach(meta => {
@@ -889,37 +915,27 @@ function renderResults(results) {
   });
   const vuln = Math.round(riskSum / wSum);
   const verdict = verdictFor(vuln);
-
-  $('#resultsSub').textContent =
-    `Отчёт сформирован локально · ${new Date().toLocaleString('ru-RU')} · проверок: ${CHECKS.length}`;
-
+  $('#resultsSub').textContent = `Отчёт сформирован локально · ${new Date().toLocaleString('ru-RU')} · проверок: ${CHECKS.length}`;
   const R = 94, C = 2 * Math.PI * R;
   const fill = $('#gaugeFill');
   fill.style.strokeDasharray = C;
   fill.style.strokeDashoffset = C;
-  $('#gStop1').setAttribute('stop-color', verdict.c[0]);
-  $('#gStop2').setAttribute('stop-color', verdict.c[1]);
   requestAnimationFrame(() => requestAnimationFrame(() => {
     fill.style.strokeDashoffset = C * (1 - vuln / 100);
   }));
-
   const numEl = $('#gaugeNum');
-  numEl.style.color = verdict.c[0];
-  const t0 = performance.now(), DUR = 1500;
+  const t0 = performance.now(), DUR = 1800;
   (function tick(now) {
     const p = Math.min((now - t0) / DUR, 1);
     const eased = 1 - Math.pow(1 - p, 3);
     numEl.textContent = Math.round(vuln * eased) + '%';
     if (p < 1) requestAnimationFrame(tick);
   })(t0);
-
   $('#verdictTitle').textContent = verdict.t;
-  $('#verdictTitle').style.color = verdict.c[0];
   $('#verdictText').textContent = verdict.d;
   $('#cntPass').textContent = pass;
   $('#cntWarn').textContent = warn;
   $('#cntFail').textContent = fail;
-
   const grid = $('#checksGrid');
   grid.innerHTML = CHECKS.map((meta, i) => {
     const r = results[meta.id];
@@ -927,7 +943,7 @@ function renderResults(results) {
     const risk = 100 - r.safety;
     const items = r.findings.map(f => `<li>${esc(f)}</li>`).join('');
     return `
-      <article class="check-card st-${st}" style="animation-delay:${i * 40}ms" tabindex="0" role="button" aria-expanded="false">
+      <article class="check-card st-${st}" style="animation-delay:${i * 30}ms" tabindex="0" role="button" aria-expanded="false">
         <div class="check-top">
           <span class="check-ic">${icon(meta.icon)}</span>
           <div class="check-name"><b>${esc(meta.name)}</b><small>${esc(meta.sub)}</small></div>
@@ -945,7 +961,6 @@ function renderResults(results) {
         <span class="check-more">${icon('chevron')}</span>
       </article>`;
   }).join('');
-
   grid.querySelectorAll('.check-card').forEach(card => {
     const toggle = () => {
       const open = card.classList.toggle('open');
@@ -956,7 +971,6 @@ function renderResults(results) {
   });
 }
 
-/* ================= РЕНДЕР РЕКОМЕНДАЦИЙ ================= */
 function renderRecommendations(results) {
   const items = [];
   CHECKS.forEach(meta => {
@@ -966,10 +980,8 @@ function renderRecommendations(results) {
     items.push({ prio, order: r.safety, icon: meta.icon, ...RECS[meta.id] });
   });
   items.sort((a, b) => a.order - b.order);
-
   const PRIO_LABEL = { crit:'Критично', high:'Важно', med:'Рекомендуется' };
   const grid = $('#recsGrid');
-
   if (!items.length) {
     grid.innerHTML = `
       <article class="rec-card prio-ok">
@@ -980,9 +992,8 @@ function renderRecommendations(results) {
       </article>`;
     return;
   }
-
   grid.innerHTML = items.map((rec, i) => `
-    <article class="rec-card prio-${rec.prio}" style="animation-delay:${i * 60}ms">
+    <article class="rec-card prio-${rec.prio}" style="animation-delay:${i * 50}ms">
       <div class="rec-head">
         <span class="rec-prio">${PRIO_LABEL[rec.prio]}</span>
         <span class="rec-ic">${icon(rec.icon)}</span>
@@ -993,10 +1004,9 @@ function renderRecommendations(results) {
     </article>`).join('');
 }
 
-/* ================= ЭНЦИКЛОПЕДИЯ УГРОЗ ================= */
 function renderThreats() {
   $('#threatsGrid').innerHTML = THREATS.map((t, i) => `
-    <article class="threat-card lv-${t.level} reveal" style="transition-delay:${(i % 5) * 70}ms">
+    <article class="threat-card lv-${t.level} reveal" style="transition-delay:${(i % 5) * 60}ms">
       <div class="threat-top">
         <span class="threat-ic">${icon(t.icon)}</span>
         <span class="threat-lv">${t.levelName}</span>
@@ -1006,7 +1016,6 @@ function renderThreats() {
     </article>`).join('');
 }
 
-/* ================= REVEAL-АНИМАЦИИ ================= */
 function initReveal() {
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
@@ -1016,33 +1025,27 @@ function initReveal() {
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 }
 
-/* ================= ИНИЦИАЛИЗАЦИЯ ================= */
 document.addEventListener('DOMContentLoaded', () => {
-  elDot         = $('#statusDot');
-  elStatusText  = $('#statusText');
-  elProgress    = $('#progressFill');
-  elPercent     = $('#progressPercent');
-  elTerm        = $('#terminalBody');
+  elDot = $('#statusDot');
+  elStatusText = $('#statusText');
+  elProgress = $('#progressFill');
+  elPercent = $('#progressPercent');
+  elTerm = $('#terminalBody');
   elScannerCard = $('#scannerCard');
-
   renderThreats();
   initReveal();
-
   $('#openConsentBtn').addEventListener('click', openModal);
   $('#modalClose').addEventListener('click', closeModal);
   $('#modalCancel').addEventListener('click', closeModal);
   $('#consentModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
   $('#consentBox').addEventListener('change', e => {
     $('#startScanBtn').disabled = !e.target.checked;
   });
-
   $('#startScanBtn').addEventListener('click', () => {
     closeModal();
     $('#scanner').scrollIntoView({ behavior:'smooth', block:'center' });
     setTimeout(runAudit, 400);
   });
-
   log('Модуль аудита готов. Нажмите «Начать проверку».', 'dim');
 });
